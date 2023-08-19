@@ -1,10 +1,11 @@
 import math
 
+
 class SmolGraph2SVG:
-    def __init__(self,units):
+    def __init__(self, units):
 
         self.dpi = 96
-        if units == "inch" :
+        if units == "inch":
             self.dpi = 96
         if units == "mm":
             self.dpi = 96/2.54/10
@@ -14,56 +15,55 @@ class SmolGraph2SVG:
         if units == "px":
             self.dpi = 1
 
-        self.document=""
-
+        self.document = ""
 
         self.physicalWidth = 10 * self.dpi
         self.physicalHeight = 10 * self.dpi
 
-        self.minValueX = -5 # in inches
-        self.maxValueX = 5 # in inches
+        self.minValueX = -5  # in inches
+        self.maxValueX = 5  # in inches
 
-        self.minValueY = -5 # in inches
-        self.maxValueY = 5 # in inches
+        self.minValueY = -5  # in inches
+        self.maxValueY = 5  # in inches
 
-        self.startX = 0 # where on the Physical screen to start
-        self.startY = 0 # where on the physical screen to start
+        self.startX = 0  # where on the Physical screen to start
+        self.startY = 0  # where on the physical screen to start
 
         self.widthX = self.physicalWidth
         self.heightY = self.physicalHeight
 
-        self.cartCenterX = 0 #-1 * (self.physicalWidth / 2)
-        self.cartCenterY = 0 #-1 * (self.physicalHeight / 2)
+        self.cartCenterX = 0  # -1 * (self.physicalWidth / 2)
+        self.cartCenterY = 0  # -1 * (self.physicalHeight / 2)
 
-    def setSize(self,x,y):
+    def setSize(self, x, y):
         self.physicalWidth = x * self.dpi
         self.physicalHeight = y * self.dpi
         self.widthX = self.physicalWidth
         self.heightY = self.physicalHeight
 
     def svgHeader(self):
-        SVGDOCUMENT=""
+        SVGDOCUMENT = ""
         GRAPHWIDTH = self.physicalWidth
         GRAPHHEIGHT = self.physicalHeight
-        SVGDOCUMENT += "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"" + str(GRAPHWIDTH) + "\"  height=\"" + str(GRAPHHEIGHT) +"\"  >\n"
-        #SVGDOCUMENT += "<rect x=\"0\" y=\"0\" width=\"" + str(GRAPHWIDTH) + "\" height=\"" + str(GRAPHHEIGHT) +"\"  style=\"fill:white; stroke-width:3;stroke:rgb(0,0,0)\"/>\n"
+        SVGDOCUMENT += "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"" + str(GRAPHWIDTH) + "\"  height=\"" + str(GRAPHHEIGHT) + "\"  >\n"
+        # SVGDOCUMENT += "<rect x=\"0\" y=\"0\" width=\"" + str(GRAPHWIDTH) + "\" height=\"" + str(GRAPHHEIGHT) +"\"  style=\"fill:white; stroke-width:3;stroke:rgb(0,0,0)\"/>\n"
         # print("[$SVGDOCUMENT]\n")
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
     def svgFooter(self):
-        SVGDOCUMENT="</svg>\n"
+        SVGDOCUMENT = "</svg>\n"
         self.document += SVGDOCUMENT
-        return SVGDOCUMENT;
+        return SVGDOCUMENT
 
-    def map(self,value, fromLow, fromHigh, toLow, toHigh):
-        #print(f'val={value},fromLow={fromLow},fromHigh={fromHigh},toLow={toLow},toHigh={toHigh}')
+    def map(self, value, fromLow, fromHigh, toLow, toHigh):
+        # print(f'val={value},fromLow={fromLow},fromHigh={fromHigh},toLow={toLow},toHigh={toHigh}')
         fromRange = fromHigh - fromLow
         toRange = toHigh - toLow
         scaleFactor = toRange / fromRange
         tmpValue = value - fromLow
         tmpValue *= scaleFactor
-        #print(f'val={value},fromLow={fromLow},fromHigh={fromHigh},toLow={toLow},toHigh={toHigh}, returnValue={tmpValue} toLow={toLow}')
+        # print(f'val={value},fromLow={fromLow},fromHigh={fromHigh},toLow={toLow},toHigh={toHigh}, returnValue={tmpValue} toLow={toLow}')
         return tmpValue + toLow
 
     def polarToCartesianFlip(self, centerX, centerY, radius, angleInDegrees):
@@ -71,13 +71,13 @@ class SmolGraph2SVG:
         angleInRadians = (angleInDegrees-90) * math.pi / 180.0
         x = centerX + (radius * math.cos(angleInRadians))
         y = centerY + (radius * math.sin(angleInRadians))
-        return x,y
+        return x, y
 
     def polarToCartesian(self, centerX, centerY, radius, angleInDegrees):
         angleInRadians = (angleInDegrees-90) * math.pi / 180.0
         x = centerX + (radius * math.cos(angleInRadians))
         y = centerY + (radius * math.sin(angleInRadians))
-        return x,y
+        return x, y
 
 
     def polarToCartesianScaled(self, centerX, centerY, radius, angleInDegrees):
@@ -89,7 +89,7 @@ class SmolGraph2SVG:
         angleInRadians = (angleInDegrees-90) * math.pi / 180.0
         x = centerX + (radius * math.cos(angleInRadians))
         y = centerY + (radius * math.sin(angleInRadians))
-        return x,y
+        return x, y
 
 
     def cartesianToPolar(self,x,y):
@@ -106,7 +106,7 @@ class SmolGraph2SVG:
         #x1 = x1 * self.dpi         #x2 = x2 * self.dpi         #y1 = y1 * self.dpi         #y2 = y2 * self.dpi
         SVGDOCUMENT = f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" style="stroke: {color}; stroke-width: {width};" />\n'
         self.document += SVGDOCUMENT
-        return SVGDOCUMENT;
+        return SVGDOCUMENT
 
     def graphRectangle(self,x,y,h,v,width,color):
         SVGDOCUMENT=""
@@ -191,7 +191,7 @@ class SmolGraph2SVG:
         endX, endY = self.polarToCartesian(x, y, radius1, startAngle1);
         SVGDOCUMENT = f'<line x1="{startX}" y1="{startY}" x2="{endX}" y2="{endY}" style="stroke: {color}; stroke-width: {width};" />\n'
         self.document += SVGDOCUMENT
-        return SVGDOCUMENT;
+        return SVGDOCUMENT
 
     def graphPolarLine(self, x, y, radius, startAngle,  width, color):
         x = x * self.dpi
