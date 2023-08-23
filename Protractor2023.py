@@ -1,12 +1,13 @@
 import PythonSmolGraphSVG
 
+
 def drawGrid():
     global theDoc
-    x=sg.minValueX
-    #print("x minValueX",x,sg.minValueX)
-    #print("sg.minValueY",sg.minValueY,sg.maxValueY)
+    x = sg.minValueX
+    # print("x minValueX", x, sg.minValueX)
+    # print("sg.minValueY", sg.minValueY, sg.maxValueY)
     while x < sg.maxValueX:
-        #print("x",x)
+        # print("x",x)
         theDoc += sg.graphLine(x, sg.minValueY, x, sg.maxValueY, 0.05, "#5f9b9c")
         x = x + 1.0
 
@@ -23,17 +24,13 @@ print("hello")
 
 sg = PythonSmolGraphSVG.SmolGraph2SVG("mm")
 
-#sg=SmolGraph2SVG()
-
-
-
-sg.setSize(200,200)
+sg.setSize(200, 200)
 theDoc = sg.svgHeader()
-drawGrid()
+# drawGrid()
 
 # cartX, cartY = sg.polarToCartesian(0,0,100,90)
-#theDoc += sg.graphLine(0,0,1.0,1.0,0.1,"green")
-#theDoc += sg.graphLine(0,0,1.0,0.0,0.1,"blue")
+# theDoc += sg.graphLine(0,0,1.0,1.0,0.1,"green")
+# theDoc += sg.graphLine(0,0,1.0,0.0,0.1,"blue")
 #
 # cartX, cartY = sg.polarToCartesian(0,0,100,180)
 # theDoc += sg.graphLine(0,0,cartX,cartY,2.0,"blue")
@@ -46,7 +43,7 @@ subSteps = 7
 
 degreesBetween = (360 / subDivisions) - 7
 
-lineWidth = 0.016
+lineWidth = 0.5
 lineColor = "black"
 
 tickLarge = 5
@@ -57,31 +54,36 @@ markLineWidth = 0.15
 
 # first ticks at 48mm
 markingDiameter = 48
-for i in range(0,180):
+for i in range(0, 180):
     tickSize = tickSmall
     if not i % 5:
         tickSize = tickMedium
     if not i % 10:
         tickSize = tickLarge
-    theDoc += sg.graphDualPolarLine(0,0, markingDiameter-tickSize,i,markingDiameter, i,markLineWidth,"#000000")
+    theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, i, markingDiameter, i, markLineWidth, "#000000")
 
 # second ticks at 58.73mm
 markingDiameter = 58.73
-for i in range(0,180):
+for i in range(0, 180):
     tickSize = tickSmall
     if not i % 5:
         tickSize = tickMedium
     if not i % 10:
         tickSize = tickLarge
-    theDoc += sg.graphDualPolarLine(0,0, markingDiameter-tickSize,i,markingDiameter, i,markLineWidth,"#000000")
+    theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, i, markingDiameter, i, markLineWidth, "#000000")
 
 # third ticks at 68mm
 markingDiameter = 68
-for i in range(0,181):
+for i in range(0, 181):
     textWidth = len(str(i)) * 0.55
     tickText = 90 - i
     if tickText < 1:
         tickText = abs(tickText)
+    if tickText == 90:
+        textWidth = 2.5
+        if i > 90:
+            textWidth = -0.5
+
     tickSize = tickSmall
     if not i % 5:
         tickSize = tickMedium
@@ -89,7 +91,7 @@ for i in range(0,181):
         tickSize = tickLarge
         theDoc += sg.graphPolarText(str(tickText), 0, 0, i + textWidth, 62.5, "6pt", "#000000", flip=True)
         # theDoc += sg.graphDiskText(0,40,i, "#00ff00",str(i))
-    theDoc += sg.graphDualPolarLine(0,0, markingDiameter-tickSize,i,markingDiameter, i,markLineWidth,"#000000")
+    theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, i, markingDiameter, i, markLineWidth, "#000000")
 
 # i = 0
 # while i < 90:
@@ -105,8 +107,13 @@ for i in range(0,181):
 #         #theDoc += sg.graphText("0",theX,theY,"#000000",24)
 #     i = i + (360/subDivisions)
 
-theDoc += sg.graphCircle(0,0,minorRadius * 0.95 , lineWidth, "red")
-theDoc += sg.graphCircle(0,0,minorRadius * 0.85 , lineWidth, "red")
+theDoc += sg.graphCircle(0, 0, 4.5 , 0.5, "red")
+# theDoc += sg.graphCircle(0, 0, minorRadius * 0.85 , lineWidth, "red")
+# theDoc += sg.graphPolarLine(-2.0,0,71,0,1,"#ff0000")
+theDoc += sg.graphDualPolarLine(-0.04, 0, 0, 0, 68, 0, 0.5, "#ff0000")
+theDoc += sg.graphDualPolarLine(-0.04, 0, 0, 180, 68, 180, 0.5, "#ff0000")
+theDoc += sg.drawArc(0, 0, 68, -0.4, 180+0.4, 0.5, "#ff0000")
+
 
 if False:
     theX, theY = sg.polarToCartesianFlip(0,0,3,45)
