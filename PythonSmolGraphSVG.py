@@ -252,7 +252,7 @@ class SmolGraph2SVG:
     def output(self):
         return self.document
 
-    def graphPolarText(self, textValue, x, y, degrees, distance, size, color):
+    def graphPolarText( self, textValue, x, y, degrees, distance, size, color, flip = False):
         SVGDOCUMENT = ""
         distance = distance * self.dpi
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-(self.cartCenterX)
@@ -261,6 +261,10 @@ class SmolGraph2SVG:
         polarX, polarY = self.polarToCartesian(x1, y1, distance, degrees)
         x1 = polarX
         y1 = polarY
-        SVGDOCUMENT += f'<text x="{x1}" y="{y1}" transform="rotate({degrees} {x1},{y1})" fill="{color}" font-face="sans" font-size="{size}">{textValue}</text>\n'
+        if flip is True:
+            degrees = degrees + 180
+        # SVGDOCUMENT += f'<text x="{x1}" y="{y1}" transform="rotate({degrees} {x1},{y1})" fill="{color}" font-face="sans" font-size="{size}">{textValue}</text>\n'
+        SVGDOCUMENT += f'<text nox="{x1}" noy="{y1}" transform="translate( {x1},{y1}) rotate({degrees}) " fill="{color}" font-family="DejaVu Sans Mono" font-size="{size}">{textValue}</text>\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
+
