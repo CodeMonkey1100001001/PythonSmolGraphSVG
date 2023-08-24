@@ -46,14 +46,14 @@ degreesBetween = (360 / subDivisions) - 7
 lineWidth = 0.5
 lineColor = "black"
 
-tickLarge = 5
-tickMedium = 4
-tickSmall = 3
+tickLarge = 4
+tickMedium = 3
+tickSmall = 2
 
 markLineWidth = 0.15
 
-# first ticks at 48mm
-markingDiameter = 48
+# first ticks
+markingDiameter = 45.5 + 2.75
 for i in range(0, 180):
     tickSize = tickSmall
     if not i % 5:
@@ -62,8 +62,8 @@ for i in range(0, 180):
         tickSize = tickLarge
     theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, i, markingDiameter, i, markLineWidth, "#000000")
 
-# second ticks at 58.73mm
-markingDiameter = 58.73
+# second ticks
+markingDiameter = 55.5 + 2.75
 for i in range(0, 180):
     tickSize = tickSmall
     if not i % 5:
@@ -72,8 +72,12 @@ for i in range(0, 180):
         tickSize = tickLarge
     theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, i, markingDiameter, i, markLineWidth, "#000000")
 
-# third ticks at 68mm
-markingDiameter = 68
+tickLarge = 4.25
+tickMedium = 3.25
+tickSmall = 2.25
+
+# third ticks
+markingDiameter = 65.5 + 2.75 -0.25
 for i in range(0, 181):
     textWidth = len(str(i)) * 0.55
     tickText = 90 - i
@@ -89,7 +93,7 @@ for i in range(0, 181):
         tickSize = tickMedium
     if not i % 10:
         tickSize = tickLarge
-        theDoc += sg.graphPolarText(str(tickText), 0, 0, i + textWidth, 62.5, "6pt", "#000000", flip=True)
+        theDoc += sg.graphPolarText(str(tickText), 0, 0, i + textWidth, 64.5-0.25, "6pt", "#000000", flip=True)
         # theDoc += sg.graphDiskText(0,40,i, "#00ff00",str(i))
     theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, i, markingDiameter, i, markLineWidth, "#000000")
 
@@ -107,12 +111,12 @@ for i in range(0, 181):
 #         #theDoc += sg.graphText("0",theX,theY,"#000000",24)
 #     i = i + (360/subDivisions)
 
-theDoc += sg.graphCircle(0, 0, 4.5 , 0.5, "red")
+theDoc += sg.graphCircle(0, 0, 4.25 , 0.5, "red")
 # theDoc += sg.graphCircle(0, 0, minorRadius * 0.85 , lineWidth, "red")
 # theDoc += sg.graphPolarLine(-2.0,0,71,0,1,"#ff0000")
-theDoc += sg.graphDualPolarLine(-0.04, 0, 0, 0, 68, 0, 0.5, "#ff0000")
-theDoc += sg.graphDualPolarLine(-0.04, 0, 0, 180, 68, 180, 0.5, "#ff0000")
-theDoc += sg.drawArc(0, 0, 68, -0.4, 180+0.4, 0.5, "#ff0000")
+theDoc += sg.graphDualPolarLine(0, 0, 0, 0, 68, 0, 0.5, "#ff0000")
+theDoc += sg.graphDualPolarLine(0, 0, 0, 180, 68, 180, 0.5, "#ff0000")
+theDoc += sg.drawArc(0, 0, 67.5, -0.4, 180+0.4, 0.5, "#ff0000")
 
 
 if False:
