@@ -1,4 +1,12 @@
 import PythonSmolGraphSVG
+import math
+
+personHeight = 5
+# for alpha in range(1,181):
+#     halfAlpha = alpha / 2
+#     b = personHeight / math.tan(halfAlpha * (3.14159265359 / 180))
+#     print(halfAlpha, personHeight, b)
+
 
 
 def drawGrid():
@@ -55,28 +63,71 @@ markLineWidth = 0.15
 # first ticks
 markingDiameter = 45.5 + 2.75
 for i in range(0, 180):
+    textWidth = len(str(i)) * 0.45
+    tickText = 180 - i
+    if tickText < 1:
+        tickText = abs(tickText)
+    if tickText == 90:
+        textWidth = 1.2
+    if tickText >99:
+        textWidth = +1.5
+
     tickSize = tickSmall
     if not i % 5:
         tickSize = tickMedium
+        theDoc += sg.graphPolarText(str(tickText), 0, 0, i + textWidth, markingDiameter - 4.25, "4pt", "#000000", flip=True)
     if not i % 10:
         tickSize = tickLarge
     theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, i, markingDiameter, i, markLineWidth, "#000000")
 
 # second ticks
+# 2nd persons height
 markingDiameter = 55.5 + 2.75
-for i in range(0, 180):
-    tickSize = tickSmall
-    if not i % 5:
-        tickSize = tickMedium
-    if not i % 10:
-        tickSize = tickLarge
-    theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, i, markingDiameter, i, markLineWidth, "#000000")
+personHeight = 5 + (.5/12)
+# for distance in range(1,11):
+#     theDegrees = 90 - (math.atan(personHeight/distance)*(180/3.14159265359))
+#     print("personHeight",personHeight,"theDistance",distance,"angle",theDegrees)
+#     theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, theDegrees, markingDiameter, theDegrees, markLineWidth, "#000000")
+#     theDoc += sg.graphPolarText(str(distance), 0, 0, theDegrees+0.6, markingDiameter - 2.2, "6pt", "#000000", flip=True)
+
+for distance in [1,2,3,4,5,6,7,8,9,10,12,14,18,24,34,55]:
+    degOffset = 0.65
+    if (distance>9):
+        degOffset = 1.4
+    theDegrees = 90 - (math.atan(personHeight/distance)*(180/3.14159265359))
+    print("personHeight",personHeight,"theDistance",distance,"angle",theDegrees)
+    theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, theDegrees, markingDiameter, theDegrees, markLineWidth, "#000000")
+    theDoc += sg.graphPolarText(str(distance), 0, 0, theDegrees + degOffset, markingDiameter - 2.2, "6pt", "#000000", flip=True)
+
+evenOdd = 0
+for distance in [-1,-2,-3,-4,-5,-6,-7,-8,-9,-10,-12,-14,-18,-24,-34,-55]:
+    degOffset = 2.1
+    if distance < -9:
+        degOffset = 3.0
+    theDegrees = 90 - (math.atan(distance / personHeight)*(180/3.14159265359))
+    print("personHeight",personHeight,"theDistance",distance,"angle",theDegrees)
+    distanceText = abs(distance)
+    theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, theDegrees, markingDiameter, theDegrees, markLineWidth, "#000000")
+    theDoc += sg.graphPolarText(str(distanceText), 0, 0, theDegrees + degOffset, markingDiameter - 2.2 + (evenOdd * 1.5), "5.5pt", "#000000", flip=True)
+    if evenOdd == 1:
+        evenOdd = 0
+    else:
+        evenOdd = 1
+
+# markingDiameter = 55.5 + 2.75
+# for i in range(0, 180):
+#     tickSize = tickSmall
+#     if not i % 5:
+#         tickSize = tickMedium
+#     if not i % 10:
+#         tickSize = tickLarge
+#     theDoc += sg.graphDualPolarLine(0, 0, markingDiameter-tickSize, i, markingDiameter, i, markLineWidth, "#000000")
 
 tickLarge = 4.25
 tickMedium = 3.25
 tickSmall = 2.25
 
-# third ticks
+# third ticks degrees 90 to 0 to 90
 markingDiameter = 65.5 + 2.75 -0.25
 for i in range(0, 181):
     textWidth = len(str(i)) * 0.55
@@ -91,6 +142,7 @@ for i in range(0, 181):
     tickSize = tickSmall
     if not i % 5:
         tickSize = tickMedium
+        theDoc += sg.graphPolarText(str(tickText), 0, 0, i + textWidth, 64.5 - 0.25, "6pt", "#000000", flip=True)
     if not i % 10:
         tickSize = tickLarge
         theDoc += sg.graphPolarText(str(tickText), 0, 0, i + textWidth, 64.5-0.25, "6pt", "#000000", flip=True)

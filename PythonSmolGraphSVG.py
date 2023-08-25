@@ -1,6 +1,5 @@
 import math
 
-
 class SmolGraph2SVG:
     def __init__(self, units):
 
@@ -11,7 +10,6 @@ class SmolGraph2SVG:
             self.dpi = 96/2.54/10
         if units == "cm":
             self.dpi = 96/2.54
-
         if units == "px":
             self.dpi = 1
 
@@ -29,17 +27,49 @@ class SmolGraph2SVG:
         self.startX = 0  # where on the Physical screen to start
         self.startY = 0  # where on the physical screen to start
 
-        self.widthX = self.physicalWidth
-        self.heightY = self.physicalHeight
+        #self.widthX = self.physicalWidth
+        #self.heightY = self.physicalHeight
 
-        self.cartCenterX = 0  # -1 * (self.physicalWidth / 2)
-        self.cartCenterY = 0  # -1 * (self.physicalHeight / 2)
+        #self.cartCenterX = 0  # -1 * (self.physicalWidth / 2)
+        #self.cartCenterY = 0  # -1 * (self.physicalHeight / 2)
 
-    def setSize(self, x, y):
-        self.physicalWidth = x * self.dpi
-        self.physicalHeight = y * self.dpi
-        self.widthX = self.physicalWidth
-        self.heightY = self.physicalHeight
+    def setSize(self, physicalWidth, physicalHeight, minX, maxX, minY, maxY):
+        self.physicalWidth = physicalWidth #* self.dpi
+        self.physicalHeight = physicalHeight #* self.dpi
+
+        #self.widthX = virtualWidth
+        #self.heightY = virtualHeight
+
+        self.minValueX = minX
+        self.maxValueX = maxX
+
+        self.minValueY = minY
+        self.maxValueY = maxY
+
+    def getSizeHuman(self):
+        retV = f'''
+Sizes\n
+dpi={self.dpi}
+physicalWidth={self.physicalWidth}
+physicalHeight={self.physicalHeight}
+minValueX = {self.minValueX}
+maxValueX = {self.maxValueX}
+minValueY = {self.minValueY}
+maxValueY = {self.maxValueY}
+'''
+        # cartCenterX = {self.cartCenterX}
+        # cartCenterY = {self.cartCenterY}
+        return retV
+
+#
+#         self.startX = 0  # where on the Physical screen to start
+#         self.startY = 0  # where on the physical screen to start
+#
+#         #self.widthX = self.physicalWidth
+#         #self.heightY = self.physicalHeight
+#
+#         self.cartCenterX = 0  # -1 * (self.physicalWidth / 2)
+#         self.cartCenterY = 0  # -1 * (self.physicalHeight / 2)
 
     def svgHeader(self):
         SVGDOCUMENT = ""
@@ -95,24 +125,29 @@ class SmolGraph2SVG:
 
     def graphLine(self, x, y, h, v, width, color):
         width = width * self.dpi
-
         # the mapping takes care of the dpi
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-self.cartCenterX
-        x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-self.cartCenterX
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
-        y2 = self.map(v, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)#-self.cartCenterX
+        # print("x",x,"x1",x1)
+        x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)#-self.cartCenterX
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)#+self.cartCenterY
+        y2 = self.map(v, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)#+self.cartCenterY
         # x1 = x1 * self.dpi         #x2 = x2 * self.dpi         #y1 = y1 * self.dpi         #y2 = y2 * self.dpi
         SVGDOCUMENT = f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" style="stroke: {color}; stroke-width: {width};" />\n'
         self.document += SVGDOCUMENT
+        # print("x",x,"x1",x1)
+        # print("x",x,"x2",x2)
+        # print("x",x,"y1",y1)
+        # print("x",x,"y2",y2)
+
         return SVGDOCUMENT
 
     def graphRectangle(self, x, y, h, v, width, color):
         SVGDOCUMENT = ""
         width = width * self.dpi
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-(self.cartCenterX)
-        x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
-        y2 = self.map(v, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) # -(self.cartCenterX)
+        x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
+        y2 = self.map(v, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
         SVGDOCUMENT += f'<polygon points="{x1},{y1} {x2},{y1} {x2},{y2} {x1},{y2}" style="fill: none; stroke:{color}; stroke-width: {width};" />\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
@@ -120,10 +155,10 @@ class SmolGraph2SVG:
     def graphRectangleFilled(self, x, y, h, v, width, color, strokeWidth, strokeColor):
         SVGDOCUMENT = ""
         width = width * self.dpi
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-(self.cartCenterX)
-        x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
-        y2 = self.map(v, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) #-(self.cartCenterX)
+        x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
+        y2 = self.map(v, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
         SVGDOCUMENT += f'<polygon points="{x1},{y1} {x2},{y1} {x2},{y2} {x1},{y2}" style="fill: {color}; stroke:{strokeColor}; stroke-width: {strokeWidth};" />\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
@@ -132,8 +167,8 @@ class SmolGraph2SVG:
         SVGDOCUMENT = ""
         radius = radius * self.dpi
         width = width * self.dpi
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
         SVGDOCUMENT += f'<circle cx="{x1}" cy="{y1}" r="{radius}" style="fill: none; stroke: {color}; stroke-width: {width}"  />\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
@@ -141,8 +176,8 @@ class SmolGraph2SVG:
     def graphDisk(self, x, y, radius, color):
         SVGDOCUMENT = ""
         radius = radius * self.dpi
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
         SVGDOCUMENT += f'<circle cx="{x1}" cy="{y1}" r="{radius}" style="fill: {color}; stroke: none;"  />\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
@@ -150,20 +185,29 @@ class SmolGraph2SVG:
     def graphDiskText(self, x, y, radius, color, textValue):
         SVGDOCUMENT = ""
         radius = radius * self.dpi
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
         SVGDOCUMENT += f'<circle cx="{x1}" cy="{y1}" r="{radius}" style="fill: {color}; stroke: none;"  ><title>{textValue}</title></circle>\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
     def graphText(self, textValue, x, y, size, color):
         SVGDOCUMENT = ""
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY ) # +self.cartCenterY
         # y1=y1+(size/3)
-        SVGDOCUMENT += f'<text x="{x1}" y="{y1}" fill="{color}" font-face="sans" font-size="{size}">{textValue}</text>\n'
+        print("text",x1,y1)
+        SVGDOCUMENT += f'<text x="{x1}" y="{y1}" fill="{color}" font-face="sans" font-size="{size}" text-anchor="end">{textValue}</text>\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
+
+        # width = width * self.dpi
+        # x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)#-self.cartCenterX
+        # x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)#-self.cartCenterX
+        # y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)#+self.cartCenterY
+        # y2 = self.map(v, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)#+self.cartCenterY
+        # SVGDOCUMENT = f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" style="stroke: {color}; stroke-width: {width};" />\n'
+        # self.document += SVGDOCUMENT
 
     def graphTextRotate(self, textValue, x, y, size, degrees, color):
         SVGDOCUMENT = ""
@@ -181,8 +225,8 @@ class SmolGraph2SVG:
         radius2 = radius2 * self.dpi
         width = width * self.dpi
 
-        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.widthX) - self.cartCenterX
-        y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.heightY, self.startY) + self.cartCenterY
+        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) # - self.cartCenterX
+        y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) # + self.cartCenterY
         startX, startY = self.polarToCartesian(x, y, radius2, startAngle2)
         endX, endY = self.polarToCartesian(x, y, radius1, startAngle1)
         SVGDOCUMENT = f'<line x1="{startX}" y1="{startY}" x2="{endX}" y2="{endY}" style="stroke: {color}; stroke-width: {width};" />\n'
@@ -193,9 +237,10 @@ class SmolGraph2SVG:
         x = x * self.dpi
         y = y * self.dpi
         radius = radius * self.dpi
+        width = float(width) * self.dpi * 1.0
 
-        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.widthX) - self.cartCenterX
-        y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.heightY, self.startY) + self.cartCenterY
+        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) # - self.cartCenterX
+        y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) # + self.cartCenterY
         # startX, startY = self.polarToCartesian(x, y, radius, endAngle)
         endX, endY = self.polarToCartesian(x, y, radius, startAngle)
         SVGDOCUMENT = f'<line x1="{x}" y1="{y}" x2="{endX}" y2="{endY}" style="stroke: {color}; stroke-width: {width};" />\n'
@@ -206,10 +251,11 @@ class SmolGraph2SVG:
         x = x * self.dpi
         y = y * self.dpi
         radius = radius * self.dpi
-        width = width * self.dpi
+        print("width",width,"dpi",self.dpi)
+        strokeWidth = float(width) * float(self.dpi) * 1.0
 
-        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-self.cartCenterX
-        y = self.map(y, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
+        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) # -self.cartCenterX
+        y = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
         startX, startY = self.polarToCartesian(x, y, radius, endAngle)
         endX, endY = self.polarToCartesian(x, y, radius, startAngle)
         if (endAngle - startAngle <= 180):
@@ -218,7 +264,7 @@ class SmolGraph2SVG:
             largeArcFlag = 1
         # largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
         # <path id="arc1" fill="none" stroke="#446688" stroke-width="2" d="M 40 20 A 20 20 0 0 0 34.14213562373095 5.857864376269051" onclick="doit();"></path>
-        SVGDOCUMENT = f'<path fill="none" stroke="{color}" stroke-width="{width}" '
+        SVGDOCUMENT = f'<path fill="none" stroke="{color}" stroke-width="{strokeWidth}" '
         # "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
         SVGDOCUMENT += f'd="M {startX} {startY} A {radius}, {radius}, 0, {largeArcFlag}, 0,  {endX}, {endY}"'
         SVGDOCUMENT += "></path>\n"
@@ -255,8 +301,9 @@ class SmolGraph2SVG:
     def graphPolarText( self, textValue, x, y, degrees, distance, size, color, flip = False):
         SVGDOCUMENT = ""
         distance = distance * self.dpi
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
+
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
         # y1=y1+(size/3)
         polarX, polarY = self.polarToCartesian(x1, y1, distance, degrees)
         x1 = polarX
