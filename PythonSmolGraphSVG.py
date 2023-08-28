@@ -1,3 +1,11 @@
+# PythonSmolGraphSVG.py
+# very simple python to basic plain SVG generator
+# useful for making parametric graphs for inkscape.
+# Version 20230828.0712
+# SVG is normally 0,0 at upper left corner this lib
+# is set to use 0,0 and a normal cartesian grid with +x,+y in
+# the upper right quadrant and -x,-y in the lower left.
+
 import math
 
 class SmolGraph2SVG:

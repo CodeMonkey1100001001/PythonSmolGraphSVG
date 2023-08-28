@@ -32,9 +32,9 @@ print("hello")
 
 sg = PythonSmolGraphSVG.SmolGraph2SVG("mm")
 
-sg.setSize(200, 200)
+sg.setSize(200, 200, -50, 50, -50, 50)
 theDoc = sg.svgHeader()
-# drawGrid()
+drawGrid()
 
 # cartX, cartY = sg.polarToCartesian(0,0,100,90)
 # theDoc += sg.graphLine(0,0,1.0,1.0,0.1,"green")
