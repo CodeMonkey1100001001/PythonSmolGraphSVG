@@ -152,7 +152,7 @@ maxValueY = {self.maxValueY}
 
     def graphRectangleFilled(self, x, y, h, v, width, color, strokeWidth, strokeColor):
         SVGDOCUMENT = ""
-        strokeWidth = width * self.dpi
+        strokeWidth = width * self.dpi # ide complains that this var is not used.
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)  # -(self.cartCenterX)
         x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)  # -(self.cartCenterX)
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)  # +self.cartCenterY
