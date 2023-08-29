@@ -152,8 +152,8 @@ maxValueY = {self.maxValueY}
 
     def graphRectangleFilled(self, x, y, h, v, width, color, strokeWidth, strokeColor):
         SVGDOCUMENT = ""
-        width = width * self.dpi
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)  #-(self.cartCenterX)
+        strokeWidth = width * self.dpi
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)  # -(self.cartCenterX)
         x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)  # -(self.cartCenterX)
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)  # +self.cartCenterY
         y2 = self.map(v, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)  # +self.cartCenterY
@@ -165,8 +165,8 @@ maxValueY = {self.maxValueY}
         SVGDOCUMENT = ""
         radius = radius * self.dpi
         width = width * self.dpi
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) # -(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth)  # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)  # +self.cartCenterY
         SVGDOCUMENT += f'<circle cx="{x1}" cy="{y1}" r="{radius}" style="fill: none; stroke: {color}; stroke-width: {width}"  />\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
@@ -174,8 +174,8 @@ maxValueY = {self.maxValueY}
     def graphDisk(self, x, y, radius, color):
         SVGDOCUMENT = ""
         radius = radius * self.dpi
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) # -(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)  # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)  # +self.cartCenterY
         SVGDOCUMENT += f'<circle cx="{x1}" cy="{y1}" r="{radius}" style="fill: {color}; stroke: none;"  />\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
@@ -183,34 +183,26 @@ maxValueY = {self.maxValueY}
     def graphDiskText(self, x, y, radius, color, textValue):
         SVGDOCUMENT = ""
         radius = radius * self.dpi
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) # -(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)  # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)  # +self.cartCenterY
         SVGDOCUMENT += f'<circle cx="{x1}" cy="{y1}" r="{radius}" style="fill: {color}; stroke: none;"  ><title>{textValue}</title></circle>\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
     def graphText(self, textValue, x, y, size, color):
         SVGDOCUMENT = ""
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) # -(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY ) # +self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth)  # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY)  # +self.cartCenterY
         # y1=y1+(size/3)
-        print("text",x1,y1)
+        # print("text",x1,y1)
         SVGDOCUMENT += f'<text x="{x1}" y="{y1}" fill="{color}" font-face="sans" font-size="{size}" text-anchor="end">{textValue}</text>\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
-        # width = width * self.dpi
-        # x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)#-self.cartCenterX
-        # x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)#-self.cartCenterX
-        # y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)#+self.cartCenterY
-        # y2 = self.map(v, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)#+self.cartCenterY
-        # SVGDOCUMENT = f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" style="stroke: {color}; stroke-width: {width};" />\n'
-        # self.document += SVGDOCUMENT
-
     def graphTextRotate(self, textValue, x, y, size, degrees, color):
         SVGDOCUMENT = ""
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.widthX)-(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.heightY, self.startY)+self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)  # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)  # +self.cartCenterY
         # y1=y1+(size/3)
         SVGDOCUMENT += f'<text x="{x1}" y="{y1}" fill="{color}" font-face="sans" font-size="{size}"  transform="rotate({degrees} {x1},{y1})">{textValue}</text>\n'
         self.document += SVGDOCUMENT
@@ -223,8 +215,8 @@ maxValueY = {self.maxValueY}
         radius2 = radius2 * self.dpi
         width = width * self.dpi
 
-        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) # - self.cartCenterX
-        y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) # + self.cartCenterY
+        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth)  # - self.cartCenterX
+        y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY)  # + self.cartCenterY
         startX, startY = self.polarToCartesian(x, y, radius2, startAngle2)
         endX, endY = self.polarToCartesian(x, y, radius1, startAngle1)
         SVGDOCUMENT = f'<line x1="{startX}" y1="{startY}" x2="{endX}" y2="{endY}" style="stroke: {color}; stroke-width: {width};" />\n'
@@ -237,8 +229,8 @@ maxValueY = {self.maxValueY}
         radius = radius * self.dpi
         width = float(width) * self.dpi * 1.0
 
-        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) # - self.cartCenterX
-        y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) # + self.cartCenterY
+        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth)  # - self.cartCenterX
+        y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY)  # + self.cartCenterY
         # startX, startY = self.polarToCartesian(x, y, radius, endAngle)
         endX, endY = self.polarToCartesian(x, y, radius, startAngle)
         SVGDOCUMENT = f'<line x1="{x}" y1="{y}" x2="{endX}" y2="{endY}" style="stroke: {color}; stroke-width: {width};" />\n'
@@ -249,11 +241,11 @@ maxValueY = {self.maxValueY}
         x = x * self.dpi
         y = y * self.dpi
         radius = radius * self.dpi
-        print("width",width,"dpi",self.dpi)
+        # print("width", width,"dpi", self.dpi)
         strokeWidth = float(width) * float(self.dpi) * 1.0
 
-        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) # -self.cartCenterX
-        y = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
+        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth)  # -self.cartCenterX
+        y = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)  # +self.cartCenterY
         startX, startY = self.polarToCartesian(x, y, radius, endAngle)
         endX, endY = self.polarToCartesian(x, y, radius, startAngle)
         if (endAngle - startAngle <= 180):
@@ -274,8 +266,8 @@ maxValueY = {self.maxValueY}
         radius = radius * self.dpi
         width = width * self.dpi
 
-        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.widthX) - self.cartCenterX
-        y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.heightY, self.startY) + self.cartCenterY
+        x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth)  # - self.cartCenterX
+        y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY)  # + self.cartCenterY
         startX, startY = self.polarToCartesian(x, y, radius, endAngle)
         endX, endY = self.polarToCartesian(x, y, radius, startAngle)
 
@@ -296,12 +288,12 @@ maxValueY = {self.maxValueY}
     def output(self):
         return self.document
 
-    def graphPolarText( self, textValue, x, y, degrees, distance, size, color, flip = False):
+    def graphPolarText(self, textValue, x, y, degrees, distance, size, color, flip = False):
         SVGDOCUMENT = ""
         distance = distance * self.dpi
 
-        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) # -(self.cartCenterX)
-        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) # +self.cartCenterY
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth)  # -(self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY)  # +self.cartCenterY
         # y1=y1+(size/3)
         polarX, polarY = self.polarToCartesian(x1, y1, distance, degrees)
         x1 = polarX
@@ -312,4 +304,3 @@ maxValueY = {self.maxValueY}
         SVGDOCUMENT += f'<text nox="{x1}" noy="{y1}" transform="translate( {x1},{y1}) rotate({degrees}) " fill="{color}" font-family="DejaVu Sans Mono" font-size="{size}">{textValue}</text>\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
-
