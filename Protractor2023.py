@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import PythonSmolGraphSVG
 import math
 
@@ -30,9 +32,9 @@ def drawGrid():
 
 print("hello")
 
-sg = PythonSmolGraphSVG.SmolGraph2SVG("mm")
+sg = PythonSmolGraphSVG.SmolGraph2SVG("cm")
 
-sg.setSize(200, 200, -50, 50, -50, 50)
+sg.setSize(20, 20, -10, 10, -10, 10)
 theDoc = sg.svgHeader()
 drawGrid()
 
@@ -54,14 +56,15 @@ degreesBetween = (360 / subDivisions) - 7
 lineWidth = 0.5
 lineColor = "black"
 
-tickLarge = 4
-tickMedium = 3
-tickSmall = 2
+# in cm
+tickLarge = .5
+tickMedium = .4
+tickSmall = .3
 
-markLineWidth = 0.15
+markLineWidth = 0.05 # 0.5mm fine line
 
 # first ticks
-markingRadius = 25
+markingRadius = 8
 for i in range(0, 360):
     textWidth = len(str(i)) * 0.45
     tickText = 180 - i
@@ -75,14 +78,48 @@ for i in range(0, 360):
     tickSize = tickSmall
     if not i % 5:
         tickSize = tickMedium
-        theDoc += sg.graphPolarText(str(tickText), 0, 0, i + textWidth, markingRadius - 4.25, "2pt", "#000000", flip=True)
+        theDoc += sg.graphPolarText(str(tickText), 0, 0, i + textWidth, markingRadius + 0.25 , "8pt", "#000000", flip=True)
     if not i % 10:
         tickSize = tickLarge
     theDoc += sg.graphDualPolarLine(0, 0, markingRadius-tickSize, i, markingRadius, i, markLineWidth, "#000000")
 
+theDoc += sg.graphLine(-9,-9,9,9,0.1,"#0000cc")
+theDoc += sg.graphCircle(0,0,9,0.2,"#ffcccc")
+
+# line on circle
+
+print("XGrid")
+for x in range(0,5):
+    theReturn = sg.circle_line_segment_intersection([0,0],5,[x, 0],[x,5],full_line=False)
+    pprint(theReturn)
+    #print("theReturn",theReturn,type(theReturn))
+    # if (len(theReturn)>1):
+    #     (x, y) = theReturn[0]
+    #     (h, v) = theReturn[1]
+    #     print(x,y,h,v)
+    #     theDoc += sg.graphLine(x, y, h, v, 0.2, "#0000ff")
+    y = 0
+    (h, v) = theReturn[0]
+    theDoc += sg.graphLine(x, y, h, v, 0.2, "#0000ff")
+
+print("YGrid")
+for y in range(0,5):
+    theReturn = sg.circle_line_segment_intersection([ 0, 0], 5, [0, y], [5, y], full_line=False)
+    pprint(theReturn)
+    #print("theReturn",theReturn,type(theReturn))
+    # if (len(theReturn)>1):
+    #     (x, y) = theReturn[0]
+    #     (h, v) = theReturn[1]
+    #     print(x,y,h,v)
+    #     theDoc += sg.graphLine(x, y, h, v, 0.2, "#0000ff")
+    x = 0
+    (h, v) = theReturn[0]
+    theDoc += sg.graphLine(x, y, h, v, 0.2, "#0000ff")
 
 
 theDoc += sg.svgFooter()
+
+
 
 fp = open("/tmp/misc/test.svg","w")
 fp.writelines(theDoc)
