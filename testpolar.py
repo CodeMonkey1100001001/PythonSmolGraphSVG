@@ -1,4 +1,4 @@
-#Cartesian to Polar and Polar to Cartesian
+# Cartesian to Polar and Polar to Cartesian
 # I expect a cartesian grid where -X is left +X is right
 # -Y is down and +Y is up
 # 5,5 is in Quadrant I (Quadrant #1)
