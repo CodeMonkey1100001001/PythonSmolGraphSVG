@@ -151,6 +151,10 @@ theDoc += sg.graphPolarLine(0, 0, 9.5, 12, 0.1, "#cc4433")
 # theDoc += sg.drawArc(4,-4,2,45,45+90,0.1,"#fafa00")
 theDoc += sg.graphArc(4.5, -4.5, 2, 45, 45 + 90, 0.1, "#fafa00")
 theDoc += sg.graphLine(-5, -9, 5, -9)  # test using defaults for width and color
+
+# test font-family change
+sg.fontFamily = "sans"
+theDoc += sg.graphText("PlainSans", 4.5, -6, "24pt", "#cc0000")
 theDoc += sg.svgFooter()
 
 fp = open("/tmp/misc/test.svg", "w")

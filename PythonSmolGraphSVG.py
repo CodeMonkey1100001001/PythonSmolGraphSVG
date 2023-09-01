@@ -1,7 +1,7 @@
 # PythonSmolGraphSVG.py
 # very simple python to basic plain SVG generator
 # useful for making parametric graphs for inkscape.
-# Version 20230831.1305
+# Version 20230901.0350
 # SVG is normally 0,0 at upper left corner this lib
 # is set to use 0,0 and a normal cartesian grid with +x,+y in
 # the upper right quadrant and -x,-y in the lower left.
@@ -16,6 +16,7 @@ class SmolGraph2SVG:
         self.penWidth = 0.19685  # 0.5mm pen
         self.fontSize = "10pt"
         self.color = "#000000"
+        self.fontFamily = "monospace"
 
         if units == "inch":
             self.dpi = 96
@@ -276,7 +277,7 @@ cartCenterY = {self.cartCenterY}
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
         # y1=y1+(size/3)
         # print("text",x1,y1)
-        SVGDOCUMENT += f'<text x="{x1}" y="{y1}" fill="{color}" font-face="sans" font-size="{size}" text-anchor="end">{textValue}</text>\n'
+        SVGDOCUMENT += f'<text x="{x1}" y="{y1}" fill="{color}" font-family="{self.fontFamily}" font-size="{size}" text-anchor="end">{textValue}</text>\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
@@ -285,7 +286,7 @@ cartCenterY = {self.cartCenterY}
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + self.cartCenterX
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) - self.cartCenterY
         # y1=y1+(size/3)
-        SVGDOCUMENT += f'<text x="{x1}" y="{y1}" fill="{color}" font-face="sans" font-size="{size}"  transform="rotate({degrees} {x1},{y1})">{textValue}</text>\n'
+        SVGDOCUMENT += f'<text x="{x1}" y="{y1}" fill="{color}" font-family="{self.fontFamily}" font-size="{size}"  transform="rotate({degrees} {x1},{y1})">{textValue}</text>\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
@@ -390,6 +391,6 @@ cartCenterY = {self.cartCenterY}
         if flip is True:
             degrees = degrees + 180
         # SVGDOCUMENT += f'<text x="{x1}" y="{y1}" transform="rotate({degrees} {x1},{y1})" fill="{color}" font-face="sans" font-size="{size}">{textValue}</text>\n'
-        SVGDOCUMENT += f'<text nox="{x1}" noy="{y1}" transform="translate( {x1},{y1}) rotate({degrees}) " fill="{color}" font-family="DejaVu Sans Mono" font-size="{size}">{textValue}</text>\n'
+        SVGDOCUMENT += f'<text nox="{x1}" noy="{y1}" transform="translate( {x1},{y1}) rotate({degrees}) " fill="{color}" font-family="{self.fontFamily}" font-size="{size}">{textValue}</text>\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT

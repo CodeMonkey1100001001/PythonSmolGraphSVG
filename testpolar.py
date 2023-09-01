@@ -12,34 +12,35 @@
 
 import math
 
+
 def cartesianToPolar(x, y):
     theRadians = math.atan2(x, y)
-    #theDegrees = math.degrees(theRadians)
-    #theDegrees = (180 / 3.14159265359) * theRadians
+    # theDegrees = math.degrees(theRadians)
+    # theDegrees = (180 / 3.14159265359) * theRadians
     theDegrees = (180 / math.pi) * theRadians
     if (theDegrees < 0):
         theDegrees = 360 + theDegrees
-    theRadius=math.sqrt((x * x) + (y * y))
+    theRadius = math.sqrt((x * x) + (y * y))
     return theDegrees, theRadius
 
 
-#Polar to Cartesian formula.
+# Polar to Cartesian formula.
 def polarToCartesian(centerX, centerY, radius, angleInDegrees):
-   angleInRadians = math.radians(angleInDegrees)
-   # angleInRadians = angleInDegrees  * 3.14159265359 / 180.0 # manual method
-   x = centerX + (radius * math.sin(angleInRadians))
-   y = centerY + (radius * math.cos(angleInRadians))
-   return x, y
+    angleInRadians = math.radians(angleInDegrees)
+    # angleInRadians = angleInDegrees  * 3.14159265359 / 180.0 # manual method
+    x = centerX + (radius * math.sin(angleInRadians))
+    y = centerY + (radius * math.cos(angleInRadians))
+    return x, y
 
 
 def testBackAndForth(x, y):
     cartesianX = x
     cartesianY = y
     print("cartesianX", cartesianX, "cartesianY", cartesianY)
-    polarDegrees, polarRadius  = cartesianToPolar(cartesianX, cartesianY )
-    print("polarDegrees",polarDegrees, "polarRadius", polarRadius)
+    polarDegrees, polarRadius = cartesianToPolar(cartesianX, cartesianY)
+    print("polarDegrees", polarDegrees, "polarRadius", polarRadius)
 
-    cartesianX , cartesianY = polarToCartesian(0,0, polarRadius, polarDegrees)
+    cartesianX, cartesianY = polarToCartesian(0, 0, polarRadius, polarDegrees)
     cartesianX = round(cartesianX, 5)
     cartesianY = round(cartesianY, 5)
     print("cartesianX", cartesianX, "cartesianY", cartesianY)
@@ -52,16 +53,17 @@ def testBackAndForth(x, y):
     print("===============")
     return returnValue
 
+
 allTestCount = 0
 numberOfTests = 8
-allTestCount += testBackAndForth(5,5)
-allTestCount += testBackAndForth(-5,-5)
-allTestCount += testBackAndForth(10,5)
-allTestCount += testBackAndForth(-108.33,235.35)
-allTestCount += testBackAndForth(0,0)
-allTestCount += testBackAndForth(0,101.001)
-allTestCount += testBackAndForth(101.11,-0)
-allTestCount += testBackAndForth(-10191.88,-762.80)
+allTestCount += testBackAndForth(5, 5)
+allTestCount += testBackAndForth(-5, -5)
+allTestCount += testBackAndForth(10, 5)
+allTestCount += testBackAndForth(-108.33, 235.35)
+allTestCount += testBackAndForth(0, 0)
+allTestCount += testBackAndForth(0, 101.001)
+allTestCount += testBackAndForth(101.11, -0)
+allTestCount += testBackAndForth(-10191.88, -762.80)
 if (allTestCount == numberOfTests):
     print("========All tests passed")
 else:
