@@ -123,7 +123,7 @@ for y in range(0, 8):
 # make sure PolarToCartesian and CartesianToPolar algos work
 print("=======================================")
 print("Testing Polar to Cart and Cart to Polar")
-theDoc += sg.graphLine(-4,2,4,-4,0.3,"#cc44cc")
+theDoc += sg.graphLine(-4,2,4,-4,0.3,color="#cc44cc")
 theDoc += sg.graphPolarText("XiX",0,0,45,5.5,"12pt","#ff0000")
 theDoc += sg.graphPolarLine(0,0,5,45,0.2,"#00ff00")
 
@@ -146,13 +146,14 @@ theDoc += sg.graphRectangle(-4,-4,-3,-3,0.1,"#770737")
 theDoc += sg.graphRectangleFilled(-4,-5,-3,-4, "#F33A6A", 0.1, "#0000cc")
 theDoc += sg.graphCircle(-5,5,1.0,0.2,"#0000ff")
 theDoc += sg.graphDisk(-5,3,1.0,"#00ccff")
-theDoc += sg.graphDiskText(-5,1,1.0,"#0000cc","disk text")  # graph a disc but with hover help
+theDoc += sg.graphDiskText(-5,1,1.0,"disk text", "#0000cc")  # graph a disc but with hover help
 theDoc += sg.graphText("PlainText",4,-5,"24pt","#cc0000")
 theDoc += sg.graphTextRotate("Rotated66",4,-5,"12pt",66,"#cc00cc")
 theDoc += sg.graphDualPolarLine(0,0,2.5,66,3.0,67,0.1,"#ff4444")
 theDoc += sg.graphPolarLine(0,0,9.5,12,0.1,"#cc4433")
 # theDoc += sg.drawArc(4,-4,2,45,45+90,0.1,"#fafa00")
 theDoc += sg.graphArc(4.5,-4.5,2,45,45+90,0.1,"#fafa00")
+theDoc += sg.graphLine(-5,-9,5,-9) # test using defaults for width and color
 theDoc += sg.svgFooter()
 
 

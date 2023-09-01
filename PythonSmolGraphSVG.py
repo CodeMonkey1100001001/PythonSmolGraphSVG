@@ -13,12 +13,18 @@ class SmolGraph2SVG:
     def __init__(self, units):
 
         self.dpi = 96
+        self.penWidth = 0.19685  # 0.5mm pen
+        self.fontSize = "10pt"
+        self.color = "#000000"
+
         if units == "inch":
             self.dpi = 96
         if units == "mm":
             self.dpi = 96/2.54/10
+            self.penWidth = 0.5  # 0.5mm pen
         if units == "cm":
             self.dpi = 96/2.54
+            self.penWidth = 0.05  # 0.5mm pen
         if units == "px":
             self.dpi = 1
 
@@ -107,7 +113,6 @@ cartCenterY = {self.cartCenterY}
         # print(f'val={value},fromLow={fromLow},fromHigh={fromHigh},toLow={toLow},toHigh={toHigh}, returnValue={tmpValue} toLow={toLow}')
         return tmpValue + toLow
 
-
     # noinspection PyMethodMayBeStatic
     # def polarToCartesian(self, centerX, centerY, radius, angleInDegrees):
     #     angleInRadians = (angleInDegrees-90) * math.pi / 180.0
@@ -136,6 +141,7 @@ cartCenterY = {self.cartCenterY}
     # 270 degrees is Y=0 and X<0 (West)
     # 45 degrees is X>0 and  X = Y (North East)
     def cartesianToPolar(self, x, y):
+        # this function needs the ability to have a x,y offset
         theRadians = math.atan2(x, y)
         # theDegrees = math.degrees(theRadians)
         # theDegrees = (180 / 3.14159265359) * theRadians
@@ -147,7 +153,7 @@ cartCenterY = {self.cartCenterY}
 
     # Polar to Cartesian formula.
     def polarToCartesian(self, centerX, centerY, radius, angleInDegrees):
-        #angleInDegrees = angleInDegrees - 90
+        # angleInDegrees = angleInDegrees - 90
         angleInRadians = math.radians(angleInDegrees)
 
         # angleInRadians = angleInDegrees  * 3.14159265359 / 180.0 # manual method
@@ -170,9 +176,29 @@ cartCenterY = {self.cartCenterY}
 
         return x, y
 
-    def graphLine(self, x, y, h, v, width, color):
-        width = width * self.dpi
-        # the mapping takes care of the dpi
+
+    # use user supplied or default
+    def getWidth(self, width):
+        if (width == False):
+            width = self.penWidth * self.dpi
+        else:
+            width = width * self.dpi
+        return width
+    # use user supplied or default
+    def getColor(self, color):
+        if (color == False):
+            color = self.color
+        return color
+    def getFontSize(self, fontSize):
+        if (fontSize == False):
+            fontSize = self.fontSize
+        return fontSize
+
+    def graphLine(self, x, y, h, v, width=False, color=False):
+        width = self.getWidth(width)
+        color = self.getColor(color)
+        #width = width * self.dpi
+        # the mapping takes care of the dpi no more x1 = x1 * self.dpi
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + self.cartCenterX
         x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + self.cartCenterX
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) - self.cartCenterY
@@ -187,9 +213,10 @@ cartCenterY = {self.cartCenterY}
 
         return SVGDOCUMENT
 
-    def graphRectangle(self, x, y, h, v, width, color):
+    def graphRectangle(self, x, y, h, v, width=False, color=False):
+        width = self.getWidth(width)
+        color = self.getColor(color)
         SVGDOCUMENT = ""
-        width = width * self.dpi
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + (self.cartCenterX)
         x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + (self.cartCenterX)
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) - self.cartCenterY
@@ -198,9 +225,11 @@ cartCenterY = {self.cartCenterY}
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
-    def graphRectangleFilled(self, x, y, h, v, fillColor, strokeWidth, strokeColor):
+    def graphRectangleFilled(self, x, y, h, v, fillColor=False,  strokeWidth=False, strokeColor=False):
+        strokeWidth = self.getWidth(strokeWidth)
+        strokeColor = self.getColor(strokeColor)
+        fillColor = self.getColor(fillColor)
         SVGDOCUMENT = ""
-        strokeWidth = strokeWidth * self.dpi
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + (self.cartCenterX)
         x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + (self.cartCenterX)
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) - self.cartCenterY
@@ -209,17 +238,19 @@ cartCenterY = {self.cartCenterY}
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
-    def graphCircle(self, x, y, radius, width, color):
+    def graphCircle(self, x, y, radius, width=False, color=False):
+        width = self.getWidth(width)
+        color = self.getColor(color)
         SVGDOCUMENT = ""
         radius = radius * self.dpi
-        width = width * self.dpi
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + (self.cartCenterX)
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) - self.cartCenterY
         SVGDOCUMENT += f'<circle cx="{x1}" cy="{y1}" r="{radius}" style="fill: none; stroke: {color}; stroke-width: {width}"  />\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
-    def graphDisk(self, x, y, radius, color):
+    def graphDisk(self, x, y, radius, color=False):
+        color = self.getColor(color)
         SVGDOCUMENT = ""
         radius = radius * self.dpi
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + (self.cartCenterX)
@@ -228,7 +259,7 @@ cartCenterY = {self.cartCenterY}
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
-    def graphDiskText(self, x, y, radius, color, textValue):
+    def graphDiskText(self, x, y, radius, textValue, color=False):
         SVGDOCUMENT = ""
         radius = radius * self.dpi
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + (self.cartCenterX)
@@ -237,7 +268,9 @@ cartCenterY = {self.cartCenterY}
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
-    def graphText(self, textValue, x, y, size, color):
+    def graphText(self, textValue, x, y, size=False, color=False):
+        size = self.getFontSize(size)
+        color = self.getColor(color)
         SVGDOCUMENT = ""
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + (self.cartCenterX)
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
@@ -256,12 +289,13 @@ cartCenterY = {self.cartCenterY}
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
-    def graphDualPolarLine(self, x, y, radius1, startAngle1, radius2, startAngle2, width, color):
+    def graphDualPolarLine(self, x, y, radius1, startAngle1, radius2, startAngle2, width=False, color=False):
+        width = self.getWidth(width)
+        color = self.getColor(color)
         # x = x * self.dpi
         # y = y * self.dpi
         radius1 = radius1 * self.dpi
         radius2 = radius2 * self.dpi
-        width = width * self.dpi
 
         x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + self.cartCenterX
         y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
@@ -271,11 +305,13 @@ cartCenterY = {self.cartCenterY}
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
-    def graphPolarLine(self, x, y, radius, startAngle,  width, color):
+    def graphPolarLine(self, x, y, radius, startAngle,  width=False, color=False):
+        width = self.getWidth(width)
+        color = self.getColor(color)
         #x = x * self.dpi
         #y = y * self.dpi
         radius = radius * self.dpi
-        width = float(width) * self.dpi * 1.0
+        #width = float(width) * self.dpi * 1.0
         x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + self.cartCenterX
         y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
         # startX, startY = self.polarToCartesian(x, y, radius, endAngle)
@@ -312,9 +348,10 @@ cartCenterY = {self.cartCenterY}
     #     self.document += SVGDOCUMENT
     #     return SVGDOCUMENT
 
-    def graphArc(self, x, y, radius, startAngle, endAngle, width, color):
+    def graphArc(self, x, y, radius, startAngle, endAngle, width=False, color=False):
+        width = self.getWidth(width)
+        color = self.getColor(color)
         radius = radius * self.dpi
-        width = width * self.dpi
 
         x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + self.cartCenterX
         y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
@@ -338,16 +375,16 @@ cartCenterY = {self.cartCenterY}
     def output(self):
         return self.document
 
-    def graphPolarText(self, textValue, x, y, degrees, distance, size, color, flip=False):
+    def graphPolarText(self, textValue, x, y, degrees, radius, size=False, color=False, flip=False):
+        size = self.getFontSize(size)
+        color = self.getColor(color)
         SVGDOCUMENT = ""
-        distance = distance * self.dpi
+        radius = radius * self.dpi
         degrees = degrees
-
         # print(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY, self.cartCenterY)
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + (self.cartCenterX)
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
-        # y1=y1+(size/3)
-        polarX, polarY = self.polarToCartesianFlip(x1, y1, distance, degrees)
+        polarX, polarY = self.polarToCartesianFlip(x1, y1, radius, degrees)
         x1 = polarX
         y1 = polarY
         if flip is True:
