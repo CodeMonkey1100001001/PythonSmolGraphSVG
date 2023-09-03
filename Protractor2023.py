@@ -148,7 +148,7 @@ theDoc += sg.graphRectangleFilled(-4, -5, -3, -4, "#F33A6A", 0.1, "#0000cc")
 theDoc += sg.graphCircle(-5, 5, 1.0, 0.2, "#0000ff")
 theDoc += sg.graphDisk(-5, 3, 1.0, "#00ccff")
 theDoc += sg.graphDiskText(-5, 1, 1.0, "disk text", "#0000cc")  # graph a disc but with hover help
-theDoc += sg.graphText("PlainText", 4, -5, "24pt", "#cc0000")
+theDoc += sg.graphText("PlainText", 1, -5, "24pt", "#cc0000")
 theDoc += sg.graphTextRotate("Rotated66", 4, -5, "12pt", 66, "#cc00cc")
 theDoc += sg.graphDualPolarLine(0, 0, 2.5, 66, 3.0, 67, 0.1, "#ff4444")
 theDoc += sg.graphPolarLine(0, 0, 9.5, 12, 0.1, "#cc4433")
@@ -158,7 +158,7 @@ theDoc += sg.graphLine(-5, -9, 5, -9)  # test using defaults for width and color
 
 # test font-family change
 sg.fontFamily = "sans"
-theDoc += sg.graphText("PlainSansText", 4.5, -6, "24pt", "#cc0000")
+theDoc += sg.graphText("PlainSansText", 1.5, -6, "24pt", "#cc0000")
 theDoc += sg.svgFooter()
 
 fp = open("/tmp/misc/test.svg", "w")

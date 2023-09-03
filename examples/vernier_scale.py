@@ -27,8 +27,8 @@ def drawGrid():
 
 print("hello")
 
-sg = PythonSmolGraphSVG.SmolGraph2SVG("cm")
-sgf = PythonSmolGraphFancyStuff.SmolGraphFancy("cm")
+sg = PythonSmolGraphSVG.SmolGraph2SVG("inch")
+sgf = PythonSmolGraphFancyStuff.SmolGraphFancy("inch")
 
 sg.setSize(20, 20, -10, 10, -10, 10)
 # sg.setCenter(-10,-10)
@@ -36,27 +36,30 @@ sg.setSize(20, 20, -10, 10, -10, 10)
 theDoc = sg.svgHeader()
 # drawGrid()
 
+theDoc += "<g>\n"
+
 for i in range(0,100):
     inchMark = i/10
     theHeight = (2/8)
-    print("inchMark", inchMark, inchMark % 1)
+    # print("inchMark", inchMark, inchMark % 1)
     if inchMark % 0.5 == 0:
         theHeight = 3/8
     if inchMark % 1 == 0:
         theHeight = 4/8
+        theDoc += sg.graphText(str(int(inchMark)),inchMark,-(1/8),"8pt",textAnchor="middle")
     theDoc += sg.graphLine(inchMark,0,inchMark,theHeight,width=0.01)
+theDoc += sg.graphText("Decimal Inches",0,0.55,"6pt")
+theDoc += "</g>\n"
 
-print("################")
-
-for i in range(0,100):
+theDoc += "<g>\n"
+for i in range(0,11):
     inchMark = i/10 - (i*0.01)
     theHeight = (2/8)
-    print("inchmark", inchMark, inchMark % 1)
-    if inchMark % 0.5 == 0:
-        theHeight = 3/8
-    if inchMark % 1 == 0:
-        theHeight = 4/8
-    theDoc += sg.graphLine(inchMark,1.00,inchMark,theHeight+1.0,width=0.01)
+    # print("inchmark", inchMark, inchMark % 1)
+    theDoc += sg.graphText(str(int(i)),inchMark,1+(11/16),"6pt",textAnchor="middle")
+    theDoc += sg.graphLine(inchMark,2.00,inchMark,2.0-theHeight,width=0.01)
+theDoc += sg.graphText("0.01",1.1,1.8,"6pt")
+theDoc += "</g>\n"
 
 # theDoc += sg.graphArc(0, 0, 7, 45, 45 + 90, 0.2, "#FF00FF")
 # theDoc += sg.graphRectangle(-4, -4, -3, -3, 0.1, "#770737")
