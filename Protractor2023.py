@@ -79,8 +79,12 @@ for i in range(0, 360):
     tickSize = tickSmall
     if not i % 5:
         tickSize = tickMedium
-        theDoc += sg.graphPolarText(str(tickText), 0, 0, i + textWidth, markingRadius + 0.75, "8pt", "#000000",
+        theDoc += sg.graphPolarText(str(tickText), 0, 0, i, markingRadius + 0.75, "8pt", "#000000",
                                     flip=False)
+        theDoc += sg.graphPolarText(str(tickText), 0, 0, i, markingRadius + -0.5, "8pt", "#000000",
+                                flip=False,textAnchor="middle")
+        theDoc += sg.graphPolarText(str(tickText), 0, 0, i, markingRadius + -0.75, "8pt", "#000000",
+                                flip=False, textAnchor="end")
     if not i % 10:
         tickSize = tickLarge
     theDoc += sg.graphDualPolarLine(0, 0, markingRadius + tickSize, i, markingRadius, i, markLineWidth, "#000000")
@@ -122,7 +126,7 @@ for y in range(0, 8):
 print("=======================================")
 print("Testing Polar to Cart and Cart to Polar")
 theDoc += sg.graphLine(-4, 2, 4, -4, 0.3, color="#cc44cc")
-theDoc += sg.graphPolarText("XiX", 0, 0, 45, 5.5, "12pt", "#ff0000")
+theDoc += sg.graphPolarText("XiX", 0, 0, 45, 5.5, "12pt", "#ff0000", textAnchor="middle")
 theDoc += sg.graphPolarLine(0, 0, 5, 45, 0.2, "#00ff00")
 
 newDeg, newRadius = sg.cartesianToPolar(-9, -3)
@@ -154,7 +158,7 @@ theDoc += sg.graphLine(-5, -9, 5, -9)  # test using defaults for width and color
 
 # test font-family change
 sg.fontFamily = "sans"
-theDoc += sg.graphText("PlainSans", 4.5, -6, "24pt", "#cc0000")
+theDoc += sg.graphText("PlainSansText", 4.5, -6, "24pt", "#cc0000")
 theDoc += sg.svgFooter()
 
 fp = open("/tmp/misc/test.svg", "w")
