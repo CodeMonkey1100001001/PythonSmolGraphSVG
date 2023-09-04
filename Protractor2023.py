@@ -156,6 +156,12 @@ theDoc += sg.graphPolarLine(0, 0, 9.5, 12, 0.1, "#cc4433")
 theDoc += sg.graphArc(4.5, -4.5, 2, 45, 45 + 90, 0.1, "#fafa00")
 theDoc += sg.graphLine(-5, -9, 5, -9)  # test using defaults for width and color
 
+
+# vernier for compass
+for i in range(0,11):
+    theDoc += sg.graphDualPolarLine(0,0,7.5,i - (0.1 * i) ,8,i - (0.1 * i),width=0.05)
+    theDoc += sg.graphPolarText(str(i),0,0,i,7.25,size="4pt", textAnchor="middle")
+
 # test font-family change
 sg.fontFamily = "sans"
 theDoc += sg.graphText("PlainSansText", 1.5, -6, "24pt", "#cc0000")
