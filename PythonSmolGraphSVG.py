@@ -1,7 +1,7 @@
 # PythonSmolGraphSVG.py
 # very simple python to basic plain SVG generator
 # useful for making parametric graphs for inkscape.
-# Version 20230901.0350
+# Version 20230908.2001
 # SVG is normally 0,0 at upper left corner this lib
 # is set to use 0,0 and a normal cartesian grid with +x,+y in
 # the upper right quadrant and -x,-y in the lower left.
@@ -354,6 +354,8 @@ cartCenterY = {self.cartCenterY}
         color = self.getColor(color)
         radius = radius * self.dpi
 
+        sweepFlag = "0"
+
         x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + self.cartCenterX
         y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
         startX, startY = self.polarToCartesianFlip(x, y, radius, endAngle)
@@ -367,7 +369,7 @@ cartCenterY = {self.cartCenterY}
         # <path id="arc1" fill="none" stroke="#446688" stroke-width="2" d="M 40 20 A 20 20 0 0 0 34.14213562373095 5.857864376269051" onclick="doit();"></path>
         SVGDOCUMENT = f'<path fill="none" stroke="{color}" stroke-width="{width}" '
         # "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
-        SVGDOCUMENT += f'd="M {startX} {startY} A {radius}, {radius}, 0, {largeArcFlag}, 0,  {endX}, {endY}"'
+        SVGDOCUMENT += f'd="M {startX} {startY} A {radius}, {radius}, 0, {largeArcFlag}, {sweepFlag},  {endX}, {endY}"'
         SVGDOCUMENT += "></path>\n"
 
         self.document += SVGDOCUMENT
@@ -396,5 +398,27 @@ cartCenterY = {self.cartCenterY}
         #textAnchor = "end"
         # SVGDOCUMENT += f'<text x="{x1}" y="{y1}" transform="rotate({degrees} {x1},{y1})" fill="{color}" font-face="sans" font-size="{size}">{textValue}</text>\n'
         SVGDOCUMENT += f'<text nox="{x1}" noy="{y1}" transform="translate( {x1},{y1}) rotate({degrees}) " fill="{color}" font-family="{self.fontFamily}" font-size="{size}" text-anchor="{textAnchor}">{textValue}</text>\n'
+        self.document += SVGDOCUMENT
+        return SVGDOCUMENT
+
+
+
+    # mostly working kinda breaks the standard
+    def graphPolygon(self,thePoints, width=False, color=False):
+        width = self.getWidth(width)
+        color = self.getColor(color)
+        SVGDOCUMENT = ""
+
+        print("graphing a polygon",thePoints)
+        SVGDOCUMENT += f'<polygon points="'
+        for oneSet in thePoints:
+            print("one",oneSet, oneSet[0],oneSet[1])
+            x = oneSet[0]
+            y = oneSet[1]
+            x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + (self.cartCenterX)
+            y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
+            SVGDOCUMENT += f'{x1},{y1} '
+
+        SVGDOCUMENT += f'" style="fill: none; stroke:{color}; stroke-width: {width};" />\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT

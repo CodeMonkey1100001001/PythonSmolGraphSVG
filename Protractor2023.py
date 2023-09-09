@@ -155,7 +155,7 @@ theDoc += sg.graphPolarLine(0, 0, 9.5, 12, 0.1, "#cc4433")
 # theDoc += sg.drawArc(4,-4,2,45,45+90,0.1,"#fafa00")
 theDoc += sg.graphArc(4.5, -4.5, 2, 45, 45 + 90, 0.1, "#fafa00")
 theDoc += sg.graphLine(-5, -9, 5, -9)  # test using defaults for width and color
-
+theDoc += sg.graphPolygon([[4.5,2],[5,-1],[6,-1.5],[5,-2],[4.5,-3],[4,-2],[3,-1.5],[4,-1]],color="#cacaff")
 
 # vernier for compass
 for i in range(0,11):
