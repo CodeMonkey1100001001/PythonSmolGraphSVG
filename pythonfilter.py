@@ -11,4 +11,5 @@ for line in sys.stdin:
     line = line.replace('stroke = "#000"', 'stroke = "#ffffff"')
     line = line.replace('stroke="#000"', 'stroke="#ffffff"')
     line = line.replace('fill="#000"', 'fill="#ffffff"')
+    line = line.replace('freecad:editable=', 'fill="#ffffff" freecad:editable=')
     print(line, end='')
