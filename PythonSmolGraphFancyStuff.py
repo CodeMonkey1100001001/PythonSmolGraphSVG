@@ -6,9 +6,6 @@
 # is set to use 0,0 and a normal cartesian grid with +x,+y in
 # the upper right quadrant and -x,-y in the lower left.
 
-import math
-
-
 class SmolGraphFancy:
     def __init__(self, units):
         self.dpi = 96
@@ -44,7 +41,6 @@ class SmolGraphFancy:
         self.cartCenterX = 0  # -1 * (self.physicalWidth / 2)
         self.cartCenterY = 0  # -1 * (self.physicalHeight / 2)
 
-
     def map(self, value, fromLow, fromHigh, toLow, toHigh):
         # print(f'val={value},fromLow={fromLow},fromHigh={fromHigh},toLow={toLow},toHigh={toHigh}')
         fromRange = fromHigh - fromLow
@@ -63,7 +59,7 @@ class SmolGraphFancy:
         self.minValueY = minY
         self.maxValueY = maxY
 
-    def circle_line_segment_intersection(self,circle_center, circle_radius, pt1, pt2, full_line=True, tangent_tol=1e-9):
+    def circle_line_segment_intersection(self, circle_center, circle_radius, pt1, pt2, full_line=True, tangent_tol=1e-9):
         """ Find the points at which a circle intersects a line-segment.  This can happen at 0, 1, or 2 points.
         https://stackoverflow.com/questions/30844482/what-is-most-efficient-way-to-find-the-intersection-of-a-line-and-a-circle-in-py
         :param circle_center: The (x, y) location of the circle center
@@ -99,7 +95,7 @@ class SmolGraphFancy:
             else:
                 return intersections
 
-    def graphTextOnACircle(self, text, x, y, radius, clockwise=True, rotation=0, extraTextInfo='', textAnchor = "start"):
+    def graphTextOnACircle(self, text, x, y, radius, clockwise=True, rotation=0, extraTextInfo='', textAnchor="start"):
 
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + (self.cartCenterX)
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
@@ -133,7 +129,7 @@ class SmolGraphFancy:
         rotation = 180 + rotation
 
         self.textCirclePathCount += 1
-        #offset = rotation / 360 * 100  # rotation in in 0-360 but offset is in %
+        # offset = rotation / 360 * 100  # rotation in in 0-360 but offset is in %
         path_id_text = f'textcirclepath{self.textCirclePathCount}'
         if clockwise:
             sweep_flag = 1
@@ -153,4 +149,3 @@ class SmolGraphFancy:
         # Combine all parts to form the final SVG
         svg_content = f'{circle_path}\n{text_style}\n'
         return svg_content
-

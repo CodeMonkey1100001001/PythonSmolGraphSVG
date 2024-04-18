@@ -81,10 +81,8 @@ for i in range(0, 360):
         tickSize = tickMedium
         theDoc += sg.graphPolarText(str(tickText), 0, 0, i, markingRadius + 0.75, "8pt", "#000000",
                                     flip=False)
-        theDoc += sg.graphPolarText(str(tickText), 0, 0, i, markingRadius + -0.5, "8pt", "#000000",
-                                flip=False,textAnchor="middle")
-        theDoc += sg.graphPolarText(str(tickText), 0, 0, i, markingRadius + -0.75, "8pt", "#000000",
-                                flip=False, textAnchor="end")
+        theDoc += sg.graphPolarText(str(tickText), 0, 0, i, markingRadius + -0.5, "8pt", "#000000", flip=False, textAnchor="middle")
+        theDoc += sg.graphPolarText(str(tickText), 0, 0, i, markingRadius + -0.75, "8pt", "#000000", flip=False, textAnchor="end")
     if not i % 10:
         tickSize = tickLarge
     theDoc += sg.graphDualPolarLine(0, 0, markingRadius + tickSize, i, markingRadius, i, markLineWidth, "#000000")
@@ -155,12 +153,12 @@ theDoc += sg.graphPolarLine(0, 0, 9.5, 12, 0.1, "#cc4433")
 # theDoc += sg.drawArc(4,-4,2,45,45+90,0.1,"#fafa00")
 theDoc += sg.graphArc(4.5, -4.5, 2, 45, 45 + 90, 0.1, "#fafa00")
 theDoc += sg.graphLine(-5, -9, 5, -9)  # test using defaults for width and color
-theDoc += sg.graphPolygon([[4.5,2],[5,-1],[6,-1.5],[5,-2],[4.5,-3],[4,-2],[3,-1.5],[4,-1]],color="#cacaff")
+theDoc += sg.graphPolygon([[4.5, 2], [5, -1], [6, -1.5], [5, -2], [4.5, -3], [4, -2], [3, -1.5], [4, -1]], color="#cacaff")
 
 # vernier for compass
-for i in range(0,11):
-    theDoc += sg.graphDualPolarLine(0,0,7.5,i - (0.1 * i) ,8,i - (0.1 * i),width=0.05)
-    theDoc += sg.graphPolarText(str(i),0,0,i,7.25,size="4pt", textAnchor="middle")
+for i in range(0, 11):
+    theDoc += sg.graphDualPolarLine(0, 0, 7.5, i - (0.1 * i), 8, i - (0.1 * i), width=0.05)
+    theDoc += sg.graphPolarText(str(i), 0, 0, i, 7.25, size="4pt", textAnchor="middle")
 
 # test font-family change
 sg.fontFamily = "sans"

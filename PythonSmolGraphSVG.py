@@ -10,6 +10,7 @@ import math
 
 from random import random
 
+
 class SmolGraph2SVG:
     def __init__(self, units):
 
@@ -93,7 +94,7 @@ cartCenterY = {self.cartCenterY}
         SVGDOCUMENT = ""
         GRAPHWIDTH = self.physicalWidth
         GRAPHHEIGHT = self.physicalHeight
-        #SVGDOCUMENT += "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"" + str(GRAPHWIDTH) + "\"  height=\"" + str(GRAPHHEIGHT) + "\"  >\n"
+        # SVGDOCUMENT += "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"" + str(GRAPHWIDTH) + "\"  height=\"" + str(GRAPHHEIGHT) + "\"  >\n"
         SVGDOCUMENT += f'''<svg xmlns="http://www.w3.org/2000/svg" version="1.1" 
             width="{str(GRAPHWIDTH)}" height="{str(GRAPHHEIGHT)}"  
             xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -182,28 +183,29 @@ cartCenterY = {self.cartCenterY}
 
         return x, y
 
-
     # use user supplied or default
     def getWidth(self, width):
-        if (width == False):
+        if (width is False):
             width = self.penWidth * self.dpi
         else:
             width = width * self.dpi
         return width
+
     # use user supplied or default
     def getColor(self, color):
-        if (color == False):
+        if (color is False):
             color = self.color
         return color
+
     def getFontSize(self, fontSize):
-        if (fontSize == False):
+        if (fontSize is False):
             fontSize = self.fontSize
         return fontSize
 
     def graphLine(self, x, y, h, v, width=False, color=False):
         width = self.getWidth(width)
         color = self.getColor(color)
-        #width = width * self.dpi
+        # width = width * self.dpi
         # the mapping takes care of the dpi no more x1 = x1 * self.dpi
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + self.cartCenterX
         x2 = self.map(h, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + self.cartCenterX
@@ -309,12 +311,11 @@ cartCenterY = {self.cartCenterY}
         startX, startY = self.polarToCartesianFlip(x, y, radius2, startAngle2)
         endX, endY = self.polarToCartesianFlip(x, y, radius1, startAngle1)
 
-
-        if makeRandom == True:
+        if makeRandom is True:
             scaleFactor = 1.0
             startX = startX + random() * scaleFactor
             startY = startY + random() * scaleFactor
-            endX = endX + random()  * scaleFactor
+            endX = endX + random() * scaleFactor
             endY = endY + random() * scaleFactor
 
         SVGDOCUMENT = f'<line x1="{startX}" y1="{startY}" x2="{endX}" y2="{endY}" style="stroke: {color}; stroke-width: {width};" />\n'
@@ -324,10 +325,10 @@ cartCenterY = {self.cartCenterY}
     def graphPolarLine(self, x, y, radius, startAngle,  width=False, color=False):
         width = self.getWidth(width)
         color = self.getColor(color)
-        #x = x * self.dpi
-        #y = y * self.dpi
+        # x = x * self.dpi
+        # y = y * self.dpi
         radius = radius * self.dpi
-        #width = float(width) * self.dpi * 1.0
+        # width = float(width) * self.dpi * 1.0
         x = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + self.cartCenterX
         y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
         # startX, startY = self.polarToCartesian(x, y, radius, endAngle)
@@ -408,26 +409,24 @@ cartCenterY = {self.cartCenterY}
         if flip is True:
             degrees = degrees + 180
         # text anchor
-        #textAnchor = "start"
-        #textAnchor = "middle"
-        #textAnchor = "end"
+        # textAnchor = "start"
+        # textAnchor = "middle"
+        # textAnchor = "end"
         # SVGDOCUMENT += f'<text x="{x1}" y="{y1}" transform="rotate({degrees} {x1},{y1})" fill="{color}" font-face="sans" font-size="{size}">{textValue}</text>\n'
         SVGDOCUMENT += f'<text nox="{x1}" noy="{y1}" transform="translate( {x1},{y1}) rotate({degrees}) " fill="{color}" font-family="{self.fontFamily}" font-size="{size}" text-anchor="{textAnchor}">{textValue}</text>\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
-
-
     # mostly working kinda breaks the standard
-    def graphPolygon(self,thePoints, width=False, color=False):
+    def graphPolygon(self, thePoints, width=False, color=False):
         width = self.getWidth(width)
         color = self.getColor(color)
         SVGDOCUMENT = ""
 
-        print("graphing a polygon",thePoints)
+        print("graphing a polygon", thePoints)
         SVGDOCUMENT += f'<polygon points="'
         for oneSet in thePoints:
-            print("one",oneSet, oneSet[0],oneSet[1])
+            print("one", oneSet, oneSet[0], oneSet[1])
             x = oneSet[0]
             y = oneSet[1]
             x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + (self.cartCenterX)
@@ -441,10 +440,10 @@ cartCenterY = {self.cartCenterY}
     def graphImage(self, filename, x, y, width, height, rotation, center=True):
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + (self.cartCenterX)
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
-        #w1 = self.map(width, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth)
-        #h1 = self.map(height, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY)
-        w1=width*self.dpi
-        h1 = height*self.dpi
+        # w1 = self.map(width, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth)
+        # h1 = self.map(height, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY)
+        w1 = width * self.dpi
+        h1 = height * self.dpi
         rx = x1
         ry = y1
 
@@ -452,15 +451,14 @@ cartCenterY = {self.cartCenterY}
             x1 = x1 - (w1/2)
             y1 = y1 - (h1/2)
         SVGDOCUMENT = ""
-        #SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}"/>\n'
+        # SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}"/>\n'
         SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" xlink:href="{filename}" transform="rotate({rotation},{rx},{ry})"/>\n'
         #
-        #SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}" transform="rotate({rotation},{rx},{ry})"/>\n'
+        # SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}" transform="rotate({rotation},{rx},{ry})"/>\n'
 
         return SVGDOCUMENT
 
     def mmtoinches(self, unitInMM):
         inches = unitInMM / 25.4
         return inches
-
 
