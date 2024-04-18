@@ -8,6 +8,7 @@
 
 import math
 
+from random import random
 
 class SmolGraph2SVG:
     def __init__(self, units):
@@ -92,7 +93,11 @@ cartCenterY = {self.cartCenterY}
         SVGDOCUMENT = ""
         GRAPHWIDTH = self.physicalWidth
         GRAPHHEIGHT = self.physicalHeight
-        SVGDOCUMENT += "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"" + str(GRAPHWIDTH) + "\"  height=\"" + str(GRAPHHEIGHT) + "\"  >\n"
+        #SVGDOCUMENT += "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"" + str(GRAPHWIDTH) + "\"  height=\"" + str(GRAPHHEIGHT) + "\"  >\n"
+        SVGDOCUMENT += f'''<svg xmlns="http://www.w3.org/2000/svg" version="1.1" 
+            width="{str(GRAPHWIDTH)}" height="{str(GRAPHHEIGHT)}"  
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            >\n'''
         # SVGDOCUMENT += "<rect x=\"0\" y=\"0\" width=\"" + str(GRAPHWIDTH) + "\" height=\"" + str(GRAPHHEIGHT) +"\"  style=\"fill:white; stroke-width:3;stroke:rgb(0,0,0)\"/>\n"
         # print("[$SVGDOCUMENT]\n")
         self.document += SVGDOCUMENT
@@ -291,6 +296,7 @@ cartCenterY = {self.cartCenterY}
         return SVGDOCUMENT
 
     def graphDualPolarLine(self, x, y, radius1, startAngle1, radius2, startAngle2, width=False, color=False):
+        makeRandom = False
         width = self.getWidth(width)
         color = self.getColor(color)
         # x = x * self.dpi
@@ -302,6 +308,15 @@ cartCenterY = {self.cartCenterY}
         y = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
         startX, startY = self.polarToCartesianFlip(x, y, radius2, startAngle2)
         endX, endY = self.polarToCartesianFlip(x, y, radius1, startAngle1)
+
+
+        if makeRandom == True:
+            scaleFactor = 1.0
+            startX = startX + random() * scaleFactor
+            startY = startY + random() * scaleFactor
+            endX = endX + random()  * scaleFactor
+            endY = endY + random() * scaleFactor
+
         SVGDOCUMENT = f'<line x1="{startX}" y1="{startY}" x2="{endX}" y2="{endY}" style="stroke: {color}; stroke-width: {width};" />\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
@@ -422,3 +437,30 @@ cartCenterY = {self.cartCenterY}
         SVGDOCUMENT += f'" style="fill: none; stroke:{color}; stroke-width: {width};" />\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
+
+    def graphImage(self, filename, x, y, width, height, rotation, center=True):
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + (self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
+        #w1 = self.map(width, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth)
+        #h1 = self.map(height, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY)
+        w1=width*self.dpi
+        h1 = height*self.dpi
+        rx = x1
+        ry = y1
+
+        if center is True:
+            x1 = x1 - (w1/2)
+            y1 = y1 - (h1/2)
+        SVGDOCUMENT = ""
+        #SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}"/>\n'
+        SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" xlink:href="{filename}" transform="rotate({rotation},{rx},{ry})"/>\n'
+        #
+        #SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}" transform="rotate({rotation},{rx},{ry})"/>\n'
+
+        return SVGDOCUMENT
+
+    def mmtoinches(self, unitInMM):
+        inches = unitInMM / 25.4
+        return inches
+
+

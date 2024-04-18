@@ -12,6 +12,11 @@ import math
 class SmolGraphFancy:
     def __init__(self, units):
         self.dpi = 96
+        self.penWidth = 0.19685  # 0.5mm pen
+        self.fontSize = "10pt"
+        self.color = "#000000"
+        self.fontFamily = "monospace"
+
         if units == "inch":
             self.dpi = 96
         if units == "mm":
@@ -21,6 +26,42 @@ class SmolGraphFancy:
         if units == "px":
             self.dpi = 1
         self.document = ""
+        self.textCirclePathCount = 0
+        self.physicalWidth = 10 * self.dpi
+        self.physicalHeight = 10 * self.dpi
+
+        self.minValueX = -5  # in inches
+        self.maxValueX = 5  # in inches
+
+        self.minValueY = -5  # in inches
+        self.maxValueY = 5  # in inches
+
+        # this allows multiple graphs to live on the same screen/print  - untested
+        self.startX = 0  # where on the Physical screen to start
+        self.startY = 0  # where on the physical screen to start
+
+        # this is so that the cartesian center can be offset
+        self.cartCenterX = 0  # -1 * (self.physicalWidth / 2)
+        self.cartCenterY = 0  # -1 * (self.physicalHeight / 2)
+
+
+    def map(self, value, fromLow, fromHigh, toLow, toHigh):
+        # print(f'val={value},fromLow={fromLow},fromHigh={fromHigh},toLow={toLow},toHigh={toHigh}')
+        fromRange = fromHigh - fromLow
+        toRange = toHigh - toLow
+        scaleFactor = toRange / fromRange
+        tmpValue = value - fromLow
+        tmpValue *= scaleFactor
+        # print(f'val={value},fromLow={fromLow},fromHigh={fromHigh},toLow={toLow},toHigh={toHigh}, returnValue={tmpValue} toLow={toLow}')
+        return tmpValue + toLow
+
+    def setSize(self, physicalWidth, physicalHeight, minX, maxX, minY, maxY):
+        self.physicalWidth = physicalWidth * self.dpi
+        self.physicalHeight = physicalHeight * self.dpi
+        self.minValueX = minX
+        self.maxValueX = maxX
+        self.minValueY = minY
+        self.maxValueY = maxY
 
     def circle_line_segment_intersection(self,circle_center, circle_radius, pt1, pt2, full_line=True, tangent_tol=1e-9):
         """ Find the points at which a circle intersects a line-segment.  This can happen at 0, 1, or 2 points.
@@ -57,3 +98,59 @@ class SmolGraphFancy:
                 return [intersections[0]]
             else:
                 return intersections
+
+    def graphTextOnACircle(self, text, x, y, radius, clockwise=True, rotation=0, extraTextInfo='', textAnchor = "start"):
+
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + (self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
+        radius = radius * self.dpi
+
+        self.textCirclePathCount += 1
+        offset = rotation / 360 * 100  # rotation in in 0-360 but offset is in %
+        path_id_text = f'textcirclepath{self.textCirclePathCount}'
+        if clockwise:
+            sweep_flag = 1
+        else:
+            sweep_flag = 0
+
+        # Path definition: This draws a full circle (360 degrees)
+        circle_path = f'<defs><path id="{path_id_text}" fill="transparent" stroke="transparent" d="M {x1} {y1 - radius} A {radius} {radius} 0 1 {sweep_flag} {x1} {y1 + radius} A {radius} {radius} 0 1 {sweep_flag} {x1} {y1 - radius}" transform="rotate(-45 {x1} {y1})" /></defs>'
+        # Text styling and alignment along the path
+        # Adjust the `startOffset` to control the starting position of the text
+        text_style = f'''
+        <text fill="{self.color}" font-family="{self.fontFamily}" font-size="{self.fontSize}" {extraTextInfo}>
+            <textPath xlink:href="#{path_id_text}" startOffset="{offset}%" style="text-anchor: {textAnchor};" dominant-baseline="{textAnchor}" >{text}</textPath>
+        </text>'''
+
+        # Combine all parts to form the final SVG
+        svg_content = f'{circle_path}\n{text_style}\n'
+        return svg_content
+
+    def graphTextOnACircleMid(self, text, x, y, radius, rotation=0, clockwise=True, extraTextInfo=''):
+        x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + (self.cartCenterX)
+        y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
+        radius = radius * self.dpi
+        rotation = 180 + rotation
+
+        self.textCirclePathCount += 1
+        #offset = rotation / 360 * 100  # rotation in in 0-360 but offset is in %
+        path_id_text = f'textcirclepath{self.textCirclePathCount}'
+        if clockwise:
+            sweep_flag = 1
+        else:
+            sweep_flag = 0
+
+        # Path definition: This draws a full circle (360 degrees)
+        circle_path = f'<defs><path id="{path_id_text}" fill="transparent" stroke="transparent" d="M {x1} {y1 - radius} A {radius} {radius} 0 1 {sweep_flag} {x1} {y1 + radius} A {radius} {radius} 0 1 {sweep_flag} {x1} {y1 - radius}" transform="rotate({rotation} {x1} {y1})" /></defs>'
+
+        # Text styling and alignment along the path
+        # Adjust the `startOffset` to control the starting position of the text
+        text_style = f'''
+        <text fill="{self.color}" font-family="{self.fontFamily}" font-size="{self.fontSize}" {extraTextInfo}>
+            <textPath xlink:href="#{path_id_text}" startOffset="50%" style="text-anchor: middle;" dominant-baseline="middle" >{text}</textPath>
+        </text>'''
+
+        # Combine all parts to form the final SVG
+        svg_content = f'{circle_path}\n{text_style}\n'
+        return svg_content
+
