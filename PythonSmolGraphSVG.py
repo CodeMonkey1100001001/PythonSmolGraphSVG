@@ -437,7 +437,7 @@ cartCenterY = {self.cartCenterY}
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
-    def graphImage(self, filename, x, y, width, height, rotation, center=True):
+    def graphImage(self, filename, x, y, width, height, rotation, center=True, extraTransform=""):
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + (self.cartCenterX)
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY) - self.cartCenterY
         # w1 = self.map(width, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth)
@@ -452,7 +452,7 @@ cartCenterY = {self.cartCenterY}
             y1 = y1 - (h1/2)
         SVGDOCUMENT = ""
         # SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}"/>\n'
-        SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" xlink:href="{filename}" transform="rotate({rotation},{rx},{ry})"/>\n'
+        SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" xlink:href="{filename}" transform="rotate({rotation},{rx},{ry}) {extraTransform}" />\n'
         #
         # SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}" transform="rotate({rotation},{rx},{ry})"/>\n'
 
@@ -461,4 +461,38 @@ cartCenterY = {self.cartCenterY}
     def mmtoinches(self, unitInMM):
         inches = unitInMM / 25.4
         return inches
+
+    def graphImageInclude(self, filename, x, y, width, height, rotation, center=True, extraTransform=""):
+            x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth) + (
+                self.cartCenterX)
+            y1 = self.map(y, self.minValueY, self.maxValueY, self.startY + self.physicalHeight,
+                          self.startY) - self.cartCenterY
+            # w1 = self.map(width, self.minValueX, self.maxValueX, self.startX, self.startX + self.physicalWidth)
+            # h1 = self.map(height, self.minValueY, self.maxValueY, self.startY + self.physicalHeight, self.startY)
+            w1 = width * self.dpi
+            h1 = height * self.dpi
+            rx = x1
+            ry = y1
+
+            if center is True:
+                x1 = x1 - (w1 / 2)
+                y1 = y1 - (h1 / 2)
+
+            file_path = "/tmp/misc/" + filename
+            file_contents=""
+            with open(file_path, 'r') as file:
+                file_contents = file.read()
+            SVGDOCUMENT = ""
+            centerFontX = x1 #- width/2 * -1.0
+            centerFontY = y1 #- height/2 * -1.0
+            # SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}"/>\n'
+            #SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" xlink:href="{filename}" transform="rotate({rotation},{rx},{ry}) {extraTransform}" />\n'
+            SVGDOCUMENT += f'''<g transform="rotate({rotation},{rx},{ry}) translate({centerFontX},{centerFontY}) scale({width},{height}) " >
+            {file_contents}
+            </g>'''
+
+            #
+            # SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}" transform="rotate({rotation},{rx},{ry})"/>\n'
+
+            return SVGDOCUMENT
 
