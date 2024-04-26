@@ -90,7 +90,7 @@ cartCenterY = {self.cartCenterY}
         self.cartCenterX = x * self.dpi  # -1 * (self.physicalWidth / 2)
         self.cartCenterY = y * self.dpi  # -1 * (self.physicalHeight / 2)
 
-    def svgHeader(self):
+    def svgHeader(self,extraData=""):
         SVGDOCUMENT = ""
         GRAPHWIDTH = self.physicalWidth
         GRAPHHEIGHT = self.physicalHeight
@@ -98,6 +98,7 @@ cartCenterY = {self.cartCenterY}
         SVGDOCUMENT += f'''<svg xmlns="http://www.w3.org/2000/svg" version="1.1" 
             width="{str(GRAPHWIDTH)}" height="{str(GRAPHHEIGHT)}"  
             xmlns:xlink="http://www.w3.org/1999/xlink"
+            {extraData}
             >\n'''
         # SVGDOCUMENT += "<rect x=\"0\" y=\"0\" width=\"" + str(GRAPHWIDTH) + "\" height=\"" + str(GRAPHHEIGHT) +"\"  style=\"fill:white; stroke-width:3;stroke:rgb(0,0,0)\"/>\n"
         # print("[$SVGDOCUMENT]\n")
@@ -288,12 +289,12 @@ cartCenterY = {self.cartCenterY}
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
-    def graphTextRotate(self, textValue, x, y, size, degrees, color, textAnchor="start"):
+    def graphTextRotate(self, textValue, x, y, degrees, color=False, textAnchor="start"):
         SVGDOCUMENT = ""
         x1 = self.map(x, self.minValueX, self.maxValueX, self.startX, self.startX+self.physicalWidth) + self.cartCenterX
         y1 = self.map(y, self.minValueY, self.maxValueY, self.startY+self.physicalHeight, self.startY) - self.cartCenterY
         # y1=y1+(size/3)
-        SVGDOCUMENT += f'<text x="{x1}" y="{y1}" fill="{color}" font-family="{self.fontFamily}" font-size="{size}"  transform="rotate({degrees} {x1},{y1})" text-anchor="{textAnchor}">{textValue}</text>\n'
+        SVGDOCUMENT += f'<text x="{x1}" y="{y1}" fill="{color}" font-family="{self.fontFamily}" font-size="{self.fontSize}"  transform="rotate({degrees} {x1},{y1})" text-anchor="{textAnchor}">{textValue}</text>\n'
         self.document += SVGDOCUMENT
         return SVGDOCUMENT
 
@@ -452,7 +453,7 @@ cartCenterY = {self.cartCenterY}
             y1 = y1 - (h1/2)
         SVGDOCUMENT = ""
         # SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}"/>\n'
-        SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" xlink:href="{filename}" transform="rotate({rotation},{rx},{ry}) {extraTransform}" />\n'
+        SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" xlink:href="{filename}" transform="rotate({rotation},{rx},{ry}) {extraTransform}"  opacity="0.3"/>\n'
         #
         # SVGDOCUMENT += f'<image x="{x1}" y="{y1}" width="{w1}" height="{h1}" href="{filename}" transform="rotate({rotation},{rx},{ry})"/>\n'
 
